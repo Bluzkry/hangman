@@ -29,6 +29,7 @@ class Hangman {
 
     axios.post(this.urlPost, postChar)
       .then(({data}) => {
+       console.log(`Word: ${data.word} Guesses left: ${data.guessesLeft} Message: ${data.msg}`);
         this.startNextRound(data);
       })
       .catch(err => console.error(err));
@@ -52,6 +53,7 @@ class Hangman {
 
   startNextRound(data) {
     if (this.checkIfGameHasEnded(data)) {
+      console.log('Game has ended: ', data.msg);
       return `Game has ended: ${data.msg}`;
     } else {
       this.count += 1;
