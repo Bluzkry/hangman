@@ -36,7 +36,6 @@ class Hangman {
   }
 
   start(callback) {
-    this.count = 5;
     const postEmail = {
       email: this.email
     };

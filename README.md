@@ -33,3 +33,10 @@ module.exports = {
 npm install
 node index.js
 ```
+
+## How to Run Tests
+0) If you have not done so, please complete steps 0 to 3 of "How to Play".
+1) Open your command line and run:
+```
+npm test
+```
