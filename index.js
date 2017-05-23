@@ -1,4 +1,5 @@
 const axios = require('axios');
+const Promise = require('bluebird');
 const {lettersToGuess, urlStart, urlPost} = require('./helpers/helpers');
 const {email} = require('./helpers/config');
 
@@ -11,10 +12,14 @@ class Hangman {
     this.urlStart = urlStart;
     this.gameId = null;
     this.urlPost = null;
+
+    this.guessCharacters = this.guessCharacters.bind(this);
+    this.start = this.start.bind(this);
+    this.startNextRound = this.startNextRound.bind(this);
   }
 
-  static checkIfGameHasEnded(response) {
-    return response.message === 'Congrats! You have solved this hangman!' || response.guessesLeft === 0;
+  checkIfGameHasEnded(response) {
+    return response.msg === 'Congrats! You have solved this hangman!' || response.guessesLeft === 0;
   }
 
   guessCharacters() {
@@ -29,7 +34,7 @@ class Hangman {
       .catch(err => console.error(err));
   }
 
-  start() {
+  start(callback) {
     const postEmail = {
       email: this.email
     };
@@ -38,8 +43,11 @@ class Hangman {
       .then(({data}) => {
         this.gameId = data.gameId;
         this.urlPost = urlPost(this.gameId);
+        // normally the callback would take in the result i.e. callback(null, data)
+        // but our promisified function doesn't need the result in order to work
+        callback()
       })
-      .catch(err => console.error(err));
+      .catch(err => callback(err, null));
   }
 
   startNextRound(data) {
@@ -52,8 +60,10 @@ class Hangman {
   }
 
   playGame() {
-    this.start();
-    this.guessCharacters();
+    const startAsync = Promise.promisify(this.start);
+    startAsync()
+      .then(this.guessCharacters)
+      .catch(err => console.error(err));
   }
 }
 
