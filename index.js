@@ -13,7 +13,23 @@ class Hangman {
     this.urlPost = null;
   }
 
-  postStart() {
+  static checkIfGameHasEnded(response) {
+    return response.message === 'Congrats! You have solved this hangman!' || response.guessesLeft === 0;
+  }
+
+  guessCharacters() {
+    const postChar = {
+      char: this.lettersToGuess[this.count]
+    };
+
+    axios.post(this.urlPost, postChar)
+      .then(({data}) => {
+        this.startNextRound(data);
+      })
+      .catch(err => console.error(err));
+  }
+
+  start() {
     const postEmail = {
       email: this.email
     };
@@ -26,17 +42,20 @@ class Hangman {
       .catch(err => console.error(err));
   }
 
-  start() {
-    this.count = 0;
-    this.gameID = null;
-    this.postStart();
+  startNextRound(data) {
+    if (this.checkIfGameHasEnded(data)) {
+      return `Game has ended: ${data.msg}`;
+    } else {
+      this.count += 1;
+      this.guessCharacters();
+    }
   }
 
   playGame() {
     this.start();
-    // this.playRound()
+    this.guessCharacters();
   }
 }
 
 const hangman = new Hangman();
-hangman.start();
+hangman.playGame();
