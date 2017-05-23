@@ -36,6 +36,7 @@ class Hangman {
   }
 
   start(callback) {
+    this.count = 5;
     const postEmail = {
       email: this.email
     };
@@ -71,3 +72,7 @@ class Hangman {
 
 const hangman = new Hangman();
 hangman.playGame();
+
+module.exports = {
+  Hangman: Hangman
+};

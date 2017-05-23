@@ -4,7 +4,7 @@
   "description": "This is a game of hangman, sadly lacking a front-end, that attempts to win Udemy's hangman game through POST calls to its REST API.",
   "main": "./server/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "keywords": [
     "udemy",
@@ -16,5 +16,8 @@
   "dependencies": {
     "axios": "^0.16.1",
     "bluebird": "^3.5.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.6.0"
   }
 }
